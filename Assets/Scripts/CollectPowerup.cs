@@ -6,6 +6,8 @@ public class CollectPowerup : Collectable
 {
     [SerializeField]
     private GameObject ParticleSystemPrefab;
+    [SerializeField]
+    private int Multiplier;
 
     // INHERITANCE
     protected override void Init()
@@ -19,5 +21,6 @@ public class CollectPowerup : Collectable
     protected override void HandlePositive()
     {
         Debug.Log("Unlock special action");
+        base.GameManager.MultiplyScore(Multiplier);
     }
 }

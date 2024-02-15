@@ -24,13 +24,16 @@ public class GameManager : MonoBehaviour
     public float SpawnInterval { get; private set; }
     public int Score { get; private set; }
     public int TimeLeft { get; private set; }
+    public bool isRunning { get; private set; }
 
     private void Start()
     {
+        isRunning = true;
+
         Score = 0;
         AddScore(0);
-        TimeLeft = 60; // DEPENDS ON DIFFICULTY
-        SpawnInterval = 3f; // DEPENDS ON DIFFICULTY
+        TimeLeft = MainManager.Instance.Time;
+        SpawnInterval = MainManager.Instance.InitialInterval;
 
         InitObjectPool();
 
@@ -73,6 +76,12 @@ public class GameManager : MonoBehaviour
         ScoreText.text = $"Score: {Score}";
     }
 
+    public void MultiplyScore(int multiplier)
+    {
+        Score *= multiplier;
+        ScoreText.text = $"Score: {Score}";
+    }
+
     public void AddTime(int value)
     {
         TimeLeft += value;
@@ -81,6 +90,8 @@ public class GameManager : MonoBehaviour
 
     public void Gameover()
     {
+        isRunning = false;
+
         CancelInvoke("SpawnNewObject");
         StopCoroutine(TimerRoutine());
 
@@ -89,7 +100,12 @@ public class GameManager : MonoBehaviour
 
     public void RestartGame()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene(1);
+    }
+
+    public void BackToMenu()
+    {
+        SceneManager.LoadScene(0);
     }
 
     private IEnumerator TimerRoutine()
